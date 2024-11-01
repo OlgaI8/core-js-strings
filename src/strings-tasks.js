@@ -20,6 +20,7 @@
  *   getStringLength(undefined) => 0
  */
 function getStringLength(value) {
+  if (!value) return 0;
   return value.length;
 }
 
@@ -54,7 +55,7 @@ function isString(value) {
  *   concatenateStrings('', 'bb') => 'bb'
  */
 function concatenateStrings(value1, value2) {
-  return value1 + value2;
+  return value1.concat(value2);
 }
 
 /**
@@ -148,8 +149,11 @@ function repeatString(str, times) {
  *   removeFirstOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeFirstOccurrences(str, value) {
-  return str
-    .slice(0, str.indexOf(value)) + str.slice(str.indexOf(value) + value.length, str.length);
+  if (str.indexOf(value) === -1) return str;
+  return (
+    str.slice(0, str.indexOf(value)) +
+    str.slice(str.indexOf(value) + value.length, str.length)
+  );
 }
 
 /**
@@ -165,8 +169,11 @@ function removeFirstOccurrences(str, value) {
  *   removeLastOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeLastOccurrences(str, value) {
-  return str
-    .slice(0, str.lastIndexOf(value)) + str.slice(str.lastIndexOf(value) + value.length, str.length);
+  if (str.lastIndexOf(value) === -1) return str;
+  return (
+    str.slice(0, str.lastIndexOf(value)) +
+    str.slice(str.lastIndexOf(value) + value.length, str.length)
+  );
 }
 
 /**
@@ -184,7 +191,7 @@ function removeLastOccurrences(str, value) {
 function sumOfCodes(str) {
   if (!str) return 0;
   let sum = 0;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     sum += str.charCodeAt(i);
   }
   return sum;
@@ -202,7 +209,7 @@ function sumOfCodes(str) {
  *   startsWith('Hello World', 'Hello') => true
  */
 function startsWith(str, substr) {
-  let result = str.startsWith(substr);
+  const result = str.startsWith(substr);
   return result;
 }
 
@@ -218,7 +225,7 @@ function startsWith(str, substr) {
  *   endsWith('Hello World', 'Hello') => false
  */
 function endsWith(str, substr) {
-  let result = str.endsWith(substr);
+  const result = str.endsWith(substr);
   return result;
 }
 
@@ -236,9 +243,10 @@ function endsWith(str, substr) {
  *   formatTime(0, 0) => "00:00"
  */
 function formatTime(minutes, seconds) {
-  let mm = minutes < 10 ? '0' + minutes : minutes;
-  let ss = seconds < 10 ? '0' + seconds : seconds;
-  return mm + ':' + ss;
+  const mm = minutes < 10 ? minutes.toString().padStart(2, '0') : minutes;
+  const ss = seconds < 10 ? seconds.toString().padStart(2, '0') : seconds;
+  const result = mm.concat(':').concat(ss);
+  return result;
 }
 
 /**
@@ -252,7 +260,7 @@ function formatTime(minutes, seconds) {
  *   reverseString('12345') => '54321'
  */
 function reverseString(str) {
-  let result = str.split('').reverse().join('');
+  const result = str.split('').reverse().join('');
   return result;
 }
 
@@ -268,7 +276,10 @@ function reverseString(str) {
  *   orderAlphabetically('abc123xyz') => '123abcxyz'
  */
 function orderAlphabetically(str) {
-  let result = str.split('').sort((a, b) => a.localeCompare(b)).join('');
+  const result = str
+    .split('')
+    .sort((a, b) => a.localeCompare(b))
+    .join('');
   return result;
 }
 
@@ -285,7 +296,7 @@ function orderAlphabetically(str) {
  *   containsSubstring('12345', '34') => true
  */
 function containsSubstring(str, substring) {
-  let result = str.includes(substring);
+  const result = str.includes(substring);
   return result;
 }
 
@@ -304,9 +315,10 @@ function containsSubstring(str, substring) {
  *   countVowels('XYZ') => 1
  */
 function countVowels(str) {
-  let regex = /[aeiouyAEIOUY]/g;
-  let result = str.match(regex);
-  return result.length;
+  if (!str) return 0;
+  const regex = /[aeiouyAEIOUY]/g;
+  const result = str.match(regex);
+  return result === null ? 0 : result.length;
 }
 
 /**
@@ -323,9 +335,9 @@ function countVowels(str) {
  *   isPalindrome('No lemon, no melon') => true
  */
 function isPalindrome(str) {
-  let regex = /[.,!?:;\s]/g;
-  let onlyLettersStr = str.replace(regex, '');
-  let reverseStr = onlyLettersStr.split('').reverse().join('').toLowerCase();  
+  const regex = /[.,!?:;\s]/g;
+  const onlyLettersStr = str.replace(regex, '');
+  const reverseStr = onlyLettersStr.split('').reverse().join('').toLowerCase();
   return reverseStr === onlyLettersStr.toLowerCase();
 }
 
@@ -342,7 +354,7 @@ function isPalindrome(str) {
  *   findLongestWord('No words here') => 'words'
  */
 function findLongestWord(sentence) {
-  let wordsArr = sentence.split(' ').sort((a, b) => b.length - a.length);
+  const wordsArr = sentence.split(' ').sort((a, b) => b.length - a.length);
   return wordsArr[0];
 }
 
@@ -357,8 +369,10 @@ function findLongestWord(sentence) {
  *   reverseWords('The Quick Brown Fox') => 'ehT kciuQ nworB xoF'
  */
 function reverseWords(str) {
-  let reversedWords = str.split(' ')
-    .map(item => item.split('').reverse().join('')).join(' ');
+  const reversedWords = str
+    .split(' ')
+    .map((item) => item.split('').reverse().join(''))
+    .join(' ');
   return reversedWords;
 }
 
@@ -374,8 +388,12 @@ function reverseWords(str) {
  *   invertCase('12345') => '12345'
  */
 function invertCase(str) {
-  let invertCaseWords = str.split('').map(char => char === char.toLowerCase() 
-    ? char.toUpperCase() : char.toLowerCase()).join('');  
+  const invertCaseWords = str
+    .split('')
+    .map((char) =>
+      char === char.toLowerCase() ? char.toUpperCase() : char.toLowerCase()
+    )
+    .join('');
   return invertCaseWords;
 }
 
@@ -463,7 +481,10 @@ function extractEmails(str) {
 function encodeToRot13(str) {
   const alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const rot13alph = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-  let replacer = (match) => match = rot13alph[alph.indexOf(match)];
+  const replacer = (match) => {
+    const matchChar = rot13alph[alph.indexOf(match)];
+    return matchChar;
+  };
   return str.replace(/[A-Za-z]/g, replacer);
 }
 
@@ -492,7 +513,8 @@ function encodeToRot13(str) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  const cards = 'A♣,2♣,3♣,4♣,5♣,6♣,7♣,8♣,9♣,10♣,J♣,Q♣,K♣,A♦,2♦,3♦,4♦,5♦,6♦,7♦,8♦,9♦,10♦,J♦,Q♦,K♦,A♥,2♥,3♥,4♥,5♥,6♥,7♥,8♥,9♥,10♥,J♥,Q♥,K♥,A♠,2♠,3♠,4♠,5♠,6♠,7♠,8♠,9♠,10♠,J♠,Q♠,K♠';
+  const cards =
+    'A♣,2♣,3♣,4♣,5♣,6♣,7♣,8♣,9♣,10♣,J♣,Q♣,K♣,A♦,2♦,3♦,4♦,5♦,6♦,7♦,8♦,9♦,10♦,J♦,Q♦,K♦,A♥,2♥,3♥,4♥,5♥,6♥,7♥,8♥,9♥,10♥,J♥,Q♥,K♥,A♠,2♠,3♠,4♠,5♠,6♠,7♠,8♠,9♠,10♠,J♠,Q♠,K♠';
   return cards.split(',').indexOf(value);
 }
 
